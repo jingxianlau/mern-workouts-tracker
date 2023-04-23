@@ -4,10 +4,12 @@ import { Workout } from '../types';
 
 type WorkoutsState = Workout[];
 
-interface WorkoutsAction {
-  type: 'SET_WORKOUTS' | 'CREATE_WORKOUT';
-  payload: Workout[];
-}
+type WorkoutsAction =
+  | {
+      type: 'CREATE_WORKOUT' | 'DELETE_WORKOUT';
+      payload: Workout;
+    }
+  | { type: 'SET_WORKOUTS'; payload: Workout[] };
 
 export type WorkoutsContextValue = {
   state: WorkoutsState;
@@ -24,7 +26,9 @@ export const workoutsReducer: Reducer<WorkoutsState, WorkoutsAction> = (
     case 'SET_WORKOUTS':
       return action.payload;
     case 'CREATE_WORKOUT':
-      return [...state, ...action.payload];
+      return [...state, action.payload];
+    case 'DELETE_WORKOUT':
+      return state.filter(workout => workout._id !== action.payload._id);
     default:
       return state;
   }

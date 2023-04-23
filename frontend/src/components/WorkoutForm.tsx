@@ -32,7 +32,7 @@ const WorkoutForm: React.FC = () => {
       setReps('');
       setError(null);
 
-      dispatch({ type: 'CREATE_WORKOUT', payload: [json] });
+      dispatch({ type: 'CREATE_WORKOUT', payload: json });
     }
   };
 
