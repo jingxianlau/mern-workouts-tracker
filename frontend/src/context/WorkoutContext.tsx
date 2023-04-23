@@ -2,16 +2,19 @@ import React, { Reducer } from 'react';
 import { ReactNode, createContext, useReducer } from 'react';
 import { Workout } from '../types';
 
-interface WorkoutsState {
-  workouts: Workout[];
-}
+type WorkoutsState = Workout[];
 
 interface WorkoutsAction {
-  type: 'SET_WORKOUTS' | 'CREATE_WORKOUTS';
+  type: 'SET_WORKOUTS' | 'CREATE_WORKOUT';
   payload: Workout[];
 }
 
-export const WorkoutsContext = createContext({});
+export type WorkoutsContextValue = {
+  state: WorkoutsState;
+  dispatch: React.Dispatch<WorkoutsAction>;
+};
+
+export const WorkoutsContext = createContext<WorkoutsContextValue | null>(null);
 
 export const workoutsReducer: Reducer<WorkoutsState, WorkoutsAction> = (
   state,
@@ -19,11 +22,9 @@ export const workoutsReducer: Reducer<WorkoutsState, WorkoutsAction> = (
 ) => {
   switch (action.type) {
     case 'SET_WORKOUTS':
-      return { workouts: action.payload };
-    case 'CREATE_WORKOUTS':
-      return {
-        workouts: [...action.payload, ...state.workouts]
-      };
+      return action.payload;
+    case 'CREATE_WORKOUT':
+      return [...state, ...action.payload];
     default:
       return state;
   }
@@ -34,9 +35,7 @@ interface Props {
 }
 
 export const WorkoutsContextProvider: React.FC<Props> = ({ children }) => {
-  const [state, dispatch] = useReducer(workoutsReducer, {
-    workouts: []
-  });
+  const [state, dispatch] = useReducer(workoutsReducer, []);
 
   return (
     <WorkoutsContext.Provider value={{ state, dispatch }}>

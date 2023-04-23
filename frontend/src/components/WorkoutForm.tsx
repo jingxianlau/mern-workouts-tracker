@@ -1,6 +1,9 @@
 import React, { FormEventHandler, useState } from 'react';
+import UseWorkoutsContext from '../hooks/useWorkoutsContext';
 
 const WorkoutForm: React.FC = () => {
+  const { dispatch } = UseWorkoutsContext();
+
   const [title, setTitle] = useState('');
   const [load, setLoad] = useState('');
   const [reps, setReps] = useState('');
@@ -28,6 +31,8 @@ const WorkoutForm: React.FC = () => {
       setLoad('');
       setReps('');
       setError(null);
+
+      dispatch({ type: 'CREATE_WORKOUT', payload: [json] });
     }
   };
 
@@ -36,11 +41,23 @@ const WorkoutForm: React.FC = () => {
       <h3>Add New Workout</h3>
 
       <label>Title</label>
-      <input type='text' onChange={e => setTitle(e.target.value)} />
+      <input
+        type='text'
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+      />
       <label>Load</label>
-      <input type='number' onChange={e => setLoad(e.target.value)} />
+      <input
+        type='number'
+        value={load}
+        onChange={e => setLoad(e.target.value)}
+      />
       <label>Reps</label>
-      <input type='number' onChange={e => setReps(e.target.value)} />
+      <input
+        type='number'
+        value={reps}
+        onChange={e => setReps(e.target.value)}
+      />
 
       <button type='submit'>Add Workout</button>
 
