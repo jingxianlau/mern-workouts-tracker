@@ -26,28 +26,62 @@ export const getSingleWorkout: RequestHandler = async (req, res) => {
 export const createWorkout: RequestHandler = async (req, res) => {
   const { title, reps, load } = req.body;
 
+  let emptyFields = [];
+  if (!title) {
+    emptyFields.push('title');
+  }
+  if (!reps) {
+    emptyFields.push('reps');
+  }
+  if (!load) {
+    emptyFields.push('load');
+  }
+
+  if (emptyFields.length) {
+    return res.status(400).json({
+      err: { message: 'Please Fill in All the Fields', fields: emptyFields }
+    });
+  }
+
   try {
     const workout = await Workout.create({ title, reps, load });
 
-    res.json(workout);
+    return res.json(workout);
   } catch (err) {
-    res.status(400).json({ err });
+    return res.status(400).json({ err });
   }
 };
 
 export const updateWorkout: RequestHandler = async (req, res) => {
   const { title, reps, load } = req.body;
+
+  let emptyFields = [];
+  if (!title) {
+    emptyFields.push('title');
+  }
+  if (!reps) {
+    emptyFields.push('reps');
+  }
+  if (!load) {
+    emptyFields.push('load');
+  }
+
+  if (!emptyFields.length) {
+    return res.status(400).json({
+      err: { message: 'Please Fill in All the Fields', fields: emptyFields }
+    });
+  }
+
   const { id } = req.params;
 
   if (!mongoose.isValidObjectId(id)) {
-    res.status(404).json({ err: 'Workout does not exist' });
+    return res.status(404).json({ err: 'Workout does not exist' });
   }
 
   const workout = await Workout.findById(id);
 
   if (!workout) {
-    res.status(404).json({ err: 'Workout does not exist' });
-    return;
+    return res.status(404).json({ err: 'Workout does not exist' });
   }
 
   workout.title = title;
@@ -56,7 +90,7 @@ export const updateWorkout: RequestHandler = async (req, res) => {
 
   await workout.save();
 
-  res.json(workout);
+  return res.json(workout);
 };
 
 export const deleteWorkout: RequestHandler = async (req, res) => {

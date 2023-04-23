@@ -7,7 +7,9 @@ const WorkoutForm: React.FC = () => {
   const [title, setTitle] = useState('');
   const [load, setLoad] = useState('');
   const [reps, setReps] = useState('');
+
   const [error, setError] = useState<null | string>(null);
+  const [emptyFields, setEmptyFields] = useState<String[]>([]);
 
   const handleSubmit: FormEventHandler = async e => {
     e.preventDefault();
@@ -25,12 +27,14 @@ const WorkoutForm: React.FC = () => {
     const json = await response.json();
 
     if (!response.ok) {
-      setError(json.error);
+      setError(json.err.message);
+      setEmptyFields(json.err.fields);
     } else {
       setTitle('');
       setLoad('');
       setReps('');
       setError(null);
+      setEmptyFields([]);
 
       dispatch({ type: 'CREATE_WORKOUT', payload: json });
     }
@@ -45,18 +49,21 @@ const WorkoutForm: React.FC = () => {
         type='text'
         value={title}
         onChange={e => setTitle(e.target.value)}
+        className={emptyFields.includes('title') ? 'error' : ''}
       />
       <label>Load</label>
       <input
         type='number'
         value={load}
         onChange={e => setLoad(e.target.value)}
+        className={emptyFields.includes('load') ? 'error' : ''}
       />
       <label>Reps</label>
       <input
         type='number'
         value={reps}
         onChange={e => setReps(e.target.value)}
+        className={emptyFields.includes('reps') ? 'error' : ''}
       />
 
       <button type='submit'>Add Workout</button>
