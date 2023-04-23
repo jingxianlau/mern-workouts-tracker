@@ -17,7 +17,7 @@ const WorkoutSchema = new mongoose_1.default.Schema({
         type: Number,
         required: true
     }
-});
+}, { timestamps: true });
 const Workout = mongoose_1.default.model('Workout', WorkoutSchema);
 exports.default = Workout;
 //# sourceMappingURL=Workout.js.map
