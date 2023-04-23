@@ -1,10 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import env from './utils/envalid';
 import workoutRoutes from './routes/workoutRoutes';
 
 const app = express();
 
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 app.use('/api/workouts/', workoutRoutes);
