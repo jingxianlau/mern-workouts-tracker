@@ -1,6 +1,7 @@
 import React from 'react';
 import { Workout } from '../types';
 import UseWorkoutsContext from '../hooks/useWorkoutsContext';
+import { formatDistanceToNow } from 'date-fns';
 
 interface WorkoutDetailsProps {
   workout: Workout;
@@ -32,8 +33,12 @@ const WorkoutDetails: React.FC<WorkoutDetailsProps> = ({ workout }) => {
       <p>
         <strong>Reps: {workout.reps}</strong>
       </p>
-      <p>{workout.createdAt}</p>
-      <span onClick={handleDelete}>delete</span>
+      <p className='timestamp'>
+        {formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}
+      </p>
+      <span onClick={handleDelete} className='material-symbols-outlined'>
+        delete
+      </span>
     </div>
   );
 };

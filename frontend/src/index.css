@@ -56,6 +56,9 @@ header a {
   font-size: 0.9em;
   color: #555;
 }
+.workout-details p.timestamp {
+  margin-top: 8px;
+}
 .workout-details span {
   position: absolute;
   top: 20px;
