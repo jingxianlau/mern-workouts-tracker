@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
+import { useLogin } from '../hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = e => {
-    e.preventDefault();
+  const { login, isLoading, error } = useLogin();
 
-    console.log(email, password);
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
+    e.preventDefault();
+    await login({ email, password });
+
+    navigate('/');
   };
 
   return (
@@ -15,12 +22,23 @@ const Login: React.FC = () => {
       <h3>Login</h3>
 
       <label>Email: </label>
-      <input type='email' onChange={e => setEmail(e.target.value)} />
+      <input
+        type='email'
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+      />
 
       <label>Password: </label>
-      <input type='password' onChange={e => setPassword(e.target.value)} />
+      <input
+        type='password'
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
 
-      <button type='submit'>Login</button>
+      <button type='submit' disabled={isLoading}>
+        Login
+      </button>
+      {error && <div className='error'>{error}</div>}
     </form>
   );
 };

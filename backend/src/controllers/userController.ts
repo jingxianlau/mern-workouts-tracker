@@ -30,7 +30,7 @@ export const login: RequestHandler = async (req, res) => {
 
   const token = createToken(user._id);
 
-  return res.json({ email, token });
+  return res.json({ email, username: user.username, token });
 };
 
 export const signUp: RequestHandler = async (req, res) => {
@@ -60,7 +60,7 @@ export const signUp: RequestHandler = async (req, res) => {
     // create jwt token
     const token = createToken(user._id);
 
-    return res.json({ email, token });
+    return res.json({ email, username, token });
   } catch (err) {
     return res.json({ err });
   }

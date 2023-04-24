@@ -5,10 +5,12 @@ interface State {
   username: null | string;
 }
 
-interface Action {
-  type: 'LOGIN' | 'LOGOUT';
-  payload: State;
-}
+type Action =
+  | {
+      type: 'LOGIN';
+      payload: State;
+    }
+  | { type: 'LOGOUT' };
 
 export type AuthContextValue = {
   state: State;
