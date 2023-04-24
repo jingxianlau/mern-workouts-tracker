@@ -2,13 +2,20 @@ import React, { useEffect } from 'react';
 import WorkoutDetails from '../components/WorkoutDetails';
 import WorkoutForm from '../components/WorkoutForm';
 import UseWorkoutsContext from '../hooks/useWorkoutsContext';
+import UseAuthContext from '../hooks/useAuthContext';
 
 const Home: React.FC = () => {
   const { state, dispatch } = UseWorkoutsContext();
 
+  const { state: user } = UseAuthContext();
+
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch('http://localhost:4000/api/workouts');
+      const response = await fetch('http://localhost:4000/api/workouts', {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        }
+      });
 
       const json = await response.json();
 
@@ -17,8 +24,10 @@ const Home: React.FC = () => {
       }
     };
 
-    fetchWorkouts();
-  }, [dispatch]);
+    if (user) {
+      fetchWorkouts();
+    }
+  }, [dispatch, user]);
 
   return (
     <div className='home'>

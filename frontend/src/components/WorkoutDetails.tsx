@@ -2,6 +2,7 @@ import React from 'react';
 import { Workout } from '../types';
 import UseWorkoutsContext from '../hooks/useWorkoutsContext';
 import { formatDistanceToNow } from 'date-fns';
+import UseAuthContext from '../hooks/useAuthContext';
 
 interface WorkoutDetailsProps {
   workout: Workout;
@@ -9,12 +10,20 @@ interface WorkoutDetailsProps {
 
 const WorkoutDetails: React.FC<WorkoutDetailsProps> = ({ workout }) => {
   const { dispatch } = UseWorkoutsContext();
+  const { state: user } = UseAuthContext();
 
   const handleDelete: React.MouseEventHandler<HTMLSpanElement> = async () => {
+    if (!user) {
+      return;
+    }
+
     const response = await fetch(
       `http://localhost:4000/api/workouts/${workout._id}`,
       {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        }
       }
     );
     const json = await response.json();

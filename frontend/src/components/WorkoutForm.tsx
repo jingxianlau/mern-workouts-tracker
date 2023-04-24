@@ -1,8 +1,10 @@
 import React, { FormEventHandler, useState } from 'react';
 import UseWorkoutsContext from '../hooks/useWorkoutsContext';
+import UseAuthContext from '../hooks/useAuthContext';
 
 const WorkoutForm: React.FC = () => {
   const { dispatch } = UseWorkoutsContext();
+  const { state: user } = UseAuthContext();
 
   const [title, setTitle] = useState('');
   const [load, setLoad] = useState('');
@@ -14,13 +16,18 @@ const WorkoutForm: React.FC = () => {
   const handleSubmit: FormEventHandler = async e => {
     e.preventDefault();
 
+    if (!user) {
+      return;
+    }
+
     const workout = { title, load, reps };
 
     const response = await fetch('http://localhost:4000/api/workouts/', {
       method: 'POST',
       body: JSON.stringify(workout),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`
       }
     });
 

@@ -1,11 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import UseAuthContext from '../hooks/useAuthContext';
 
 const Navbar: React.FC = () => {
   const { state } = UseAuthContext();
   const { logout } = useLogout();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <header>
@@ -16,7 +22,7 @@ const Navbar: React.FC = () => {
         {state.username ? (
           <nav>
             <h3>{state.username}</h3>
-            <button onClick={logout}>Logout</button>
+            <button onClick={handleLogout}>Logout</button>
           </nav>
         ) : (
           <nav>

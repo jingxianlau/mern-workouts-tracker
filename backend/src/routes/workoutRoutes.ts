@@ -9,6 +9,9 @@ import {
   updateWorkout,
   deleteWorkout
 } from '../controllers/workoutController';
+import requireAuth from '../middleware/requireAuth';
+
+router.use(requireAuth);
 
 router.get('/', getAllWorkouts);
 
