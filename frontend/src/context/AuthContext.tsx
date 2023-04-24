@@ -1,30 +1,40 @@
-import React, { ReactNode, createContext, useReducer } from 'react';
+import React, {
+  ReactNode,
+  Reducer,
+  createContext,
+  useEffect,
+  useReducer
+} from 'react';
 
-interface State {
+interface AuthState {
   email: null | string;
   username: null | string;
+  token: null | string;
 }
 
-type Action =
+type AuthAction =
   | {
       type: 'LOGIN';
-      payload: State;
+      payload: AuthState;
     }
   | { type: 'LOGOUT' };
 
 export type AuthContextValue = {
-  state: State;
-  dispatch: React.Dispatch<Action>;
+  state: AuthState;
+  dispatch: React.Dispatch<AuthAction>;
 };
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
-export const authReducer = (state: State, action: Action) => {
+export const authReducer: Reducer<AuthState, AuthAction> = (
+  state: AuthState,
+  action: AuthAction
+) => {
   switch (action.type) {
     case 'LOGIN':
       return action.payload;
     case 'LOGOUT':
-      return { email: null, username: null };
+      return { email: null, username: null, token: null };
     default:
       return state;
   }
@@ -37,8 +47,17 @@ interface Props {
 const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, {
     email: null,
-    username: null
+    username: null,
+    token: null
   });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '');
+
+    if (user) {
+      dispatch({ type: 'LOGIN', payload: user });
+    }
+  }, []);
 
   console.log(state);
 
