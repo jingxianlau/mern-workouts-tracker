@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-interface SignUpProps {}
-
-const SignUp: React.FC<SignUpProps> = ({}) => {
+const SignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -25,6 +23,8 @@ const SignUp: React.FC<SignUpProps> = ({}) => {
 
       <label>Password: </label>
       <input type='password' onChange={e => setPassword(e.target.value)} />
+
+      <button type='submit'>Sign Up</button>
     </form>
   );
 };

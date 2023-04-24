@@ -38,7 +38,7 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     username: null
   });
 
-  console.log(`Auth context state: ${state}`);
+  console.log(state);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
