@@ -6,11 +6,11 @@ import React, {
   useReducer
 } from 'react';
 
-interface AuthState {
-  email: null | string;
-  username: null | string;
-  token: null | string;
-}
+type AuthState = {
+  email: string;
+  username: string;
+  token: string;
+} | null;
 
 type AuthAction =
   | {
@@ -34,7 +34,7 @@ export const authReducer: Reducer<AuthState, AuthAction> = (
     case 'LOGIN':
       return action.payload;
     case 'LOGOUT':
-      return { email: null, username: null, token: null };
+      return null;
     default:
       return state;
   }
@@ -45,11 +45,7 @@ interface Props {
 }
 
 const AuthContextProvider: React.FC<Props> = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, {
-    email: null,
-    username: null,
-    token: null
-  });
+  const [state, dispatch] = useReducer(authReducer, null);
 
   useEffect(() => {
     const user = localStorage.getItem('user');

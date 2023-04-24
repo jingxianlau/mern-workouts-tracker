@@ -4,7 +4,7 @@ import { useLogout } from '../hooks/useLogout';
 import UseAuthContext from '../hooks/useAuthContext';
 
 const Navbar: React.FC = () => {
-  const { state } = UseAuthContext();
+  const { state: user } = UseAuthContext();
   const { logout } = useLogout();
   const navigate = useNavigate();
 
@@ -19,9 +19,9 @@ const Navbar: React.FC = () => {
         <Link to='/'>
           <h1>Workout Buddy</h1>
         </Link>
-        {state.username ? (
+        {user ? (
           <nav>
-            <h3>{state.username}</h3>
+            <h3>{user.username}</h3>
             <button onClick={handleLogout}>Logout</button>
           </nav>
         ) : (

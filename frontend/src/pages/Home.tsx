@@ -11,6 +11,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const fetchWorkouts = async () => {
+      if (!user) {
+        return;
+      }
       const response = await fetch('http://localhost:4000/api/workouts', {
         headers: {
           Authorization: `Bearer ${user.token}`
@@ -24,9 +27,7 @@ const Home: React.FC = () => {
       }
     };
 
-    if (user) {
-      fetchWorkouts();
-    }
+    fetchWorkouts();
   }, [dispatch, user]);
 
   return (
