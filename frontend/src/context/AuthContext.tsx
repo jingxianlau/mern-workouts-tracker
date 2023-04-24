@@ -6,7 +6,7 @@ import React, {
   useReducer
 } from 'react';
 
-type AuthState = {
+export type AuthState = {
   email: string;
   username: string;
   token: string;
@@ -47,15 +47,19 @@ interface Props {
 const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, null);
 
+  console.log(state);
+
   useEffect(() => {
     const user = localStorage.getItem('user');
 
     if (user) {
-      dispatch({ type: 'LOGIN', payload: JSON.parse(user) });
+      try {
+        dispatch({ type: 'LOGIN', payload: JSON.parse(user) });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }, []);
-
-  console.log(state);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>

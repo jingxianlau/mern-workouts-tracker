@@ -1,9 +1,19 @@
 import { RequestHandler } from 'express';
 import Workout from '../models/Workout';
 import mongoose from 'mongoose';
+import env from '../utils/envalid';
+import jwt from 'jsonwebtoken';
+
+interface JwtPayload {
+  _id: string;
+}
 
 export const getAllWorkouts: RequestHandler = async (req, res) => {
-  const workouts = await Workout.find({});
+  const { authorization } = req.headers;
+  const token = (authorization as string).split(' ')[1];
+  const { _id } = jwt.verify(token, env.SECRET) as JwtPayload;
+
+  const workouts = await Workout.find({ user_id: _id }).sort({ createdAt: -1 });
   res.json(workouts);
 };
 
@@ -43,8 +53,12 @@ export const createWorkout: RequestHandler = async (req, res) => {
     });
   }
 
+  const { authorization } = req.headers;
+  const token = (authorization as string).split(' ')[1];
+  const { _id } = jwt.verify(token, env.SECRET) as JwtPayload;
+
   try {
-    const workout = await Workout.create({ title, reps, load });
+    const workout = await Workout.create({ title, reps, load, user_id: _id });
 
     return res.json(workout);
   } catch (err) {
